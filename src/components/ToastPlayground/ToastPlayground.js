@@ -1,49 +1,33 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
 import ToastShelf from "../ToastShelf/ToastShelf";
+import { ToasttContext } from "../ToastProvider/ToastProvider";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
-  const [toasts, setToasts] = useState([
-    {
-      id: crypto.randomUUID(),
-      messege: "Oh-no",
-      variant: "notice",
-    },
-    {
-      id: crypto.randomUUID(),
-      messege: "OhYes",
-      variant: "warning",
-    },
-  ]);
-  const [messege, setMessege] = useState("");
+  const { creatToast } = useContext(ToasttContext);
+
+  const [message, setmessage] = useState("");
   const [variant, setVariant] = useState(VARIANT_OPTIONS[0]);
 
   function handleCreateToast(event) {
     event.preventDefault();
-    const nextToasts = [...toasts, { id: crypto.randomUUID(), messege, variant }];
-    setToasts(nextToasts);
-    setMessege("");
+    creatToast(variant, message);
+    setmessage("");
     setVariant(VARIANT_OPTIONS[0]);
   }
 
-  function handleDismiss(id) {
-    const nextToasts = toasts.filter((toast) => {
-      return toast.id !== id;
-    });
-    setToasts(nextToasts);
-  }
   return (
     <div className={styles.wrapper}>
       <header>
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-      <ToastShelf toastes={toasts} handleDismiss={handleDismiss} />
+      <ToastShelf />
       <form className={styles.controlsWrapper} onSubmit={handleCreateToast}>
         <div className={styles.row}>
           <label htmlFor="message" className={styles.label} style={{ alignSelf: "baseline" }}>
@@ -53,8 +37,8 @@ function ToastPlayground() {
             <textarea
               id="message"
               className={styles.messageInput}
-              value={messege}
-              onChange={(event) => setMessege(event.target.value)}
+              value={message}
+              onChange={(event) => setmessage(event.target.value)}
             />
           </div>
         </div>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AlertOctagon, AlertTriangle, CheckCircle, Info, X } from "react-feather";
 
 import VisuallyHidden from "../VisuallyHidden";
 
 import styles from "./Toast.module.css";
+import { ToasttContext } from "../ToastProvider/ToastProvider";
 
 const ICONS_BY_VARIANT = {
   notice: Info,
@@ -12,7 +13,8 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast({ variant, handleDismiss, children, id }) {
+function Toast({ variant, children, id }) {
+  const { dismissToast } = useContext(ToasttContext);
   const Icon = ICONS_BY_VARIANT[variant];
   return (
     <div className={`${styles.toast} ${styles[variant]}`}>
@@ -20,7 +22,7 @@ function Toast({ variant, handleDismiss, children, id }) {
         <Icon size={24} />
       </div>
       <p className={styles.content}>{children}</p>
-      <button className={styles.closeButton} onClick={() => handleDismiss(id)}>
+      <button className={styles.closeButton} onClick={() => dismissToast(id)}>
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
