@@ -3,19 +3,29 @@ import React, { useState } from "react";
 import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
+import Toast from "../Toast/Toast";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
+  const [isRendered, setIsRendered] = useState(false);
   const [messege, setMessege] = useState("");
   const [variant, setVariant] = useState(VARIANT_OPTIONS[0]);
+
+  function handleDismiss() {
+    setIsRendered(false);
+  }
   return (
     <div className={styles.wrapper}>
       <header>
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-
+      {isRendered && (
+        <Toast variant={variant} handleDismiss={handleDismiss}>
+          {messege}
+        </Toast>
+      )}
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label htmlFor="message" className={styles.label} style={{ alignSelf: "baseline" }}>
@@ -50,15 +60,13 @@ function ToastPlayground() {
                 </label>
               );
             })}
-
-            {/* TODO Other Variant radio buttons here */}
           </div>
         </div>
 
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={() => window.alert(`${variant} - ${messege}`)}>Pop Toast!</Button>
+            <Button onClick={() => setIsRendered(true)}>Pop Toast!</Button>
           </div>
         </div>
       </div>
